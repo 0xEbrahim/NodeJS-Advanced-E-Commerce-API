@@ -8,20 +8,20 @@ const categorySchema = new mongoose.Schema(
       unique: [true, "category name should be unique."],
       minlength: [3, "Too short category name"],
       maxlength: [32, "Too long category name."],
+      trim: true,
     },
     slug: {
       type: String,
       lowercase: true,
       trim: true,
     },
-    image:{
-        type : String
-    }
+    image: {
+      type: String,
+    },
   },
   {
     timestamps: true,
   }
 );
-
 
 export default mongoose.model("Category", categorySchema);
