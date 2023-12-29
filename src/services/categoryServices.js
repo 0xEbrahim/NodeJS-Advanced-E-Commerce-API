@@ -6,8 +6,9 @@ import ApiError from "../utils/apiError.js";
 
 /**
  * @desc    Get all categories
- * @route   GET /api/v1/categories
- * @access  Public
+ * @method  GET
+ * @route   /api/v1/categories
+ * @access  public
  */
 const getCategory = asyncHandler(async (req, res, next) => {
   const page = req.query.page * 1 || 1;
@@ -24,8 +25,9 @@ const getCategory = asyncHandler(async (req, res, next) => {
 
 /**
  * @desc    Get a specific category by id
- * @route   GET /api/v1/categories/:id
- * @access  Public
+ * @method  GET
+ * @route   /api/v1/categories/:id
+ * @access  public
  */
 const getASingleCategory = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
@@ -36,8 +38,9 @@ const getASingleCategory = asyncHandler(async (req, res, next) => {
 
 /**
  * @desc    Create Category
- * @route   POST /api/v1/categories
- * @access  Private
+ * @method  POST
+ * @route   /api/v1/categories
+ * @access  private
  */
 const createCategory = asyncHandler(async (req, res, next) => {
   const { name } = req.body;
@@ -47,8 +50,9 @@ const createCategory = asyncHandler(async (req, res, next) => {
 
 /**
  * @desc    Update category by ID
- * @route   PUT /api/v1/categories/:id
- * @access  Private
+ * @method  PUT
+ * @route   /api/v1/categories/:id
+ * @access  private
  */
 const updateCategory = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
@@ -67,8 +71,9 @@ const updateCategory = asyncHandler(async (req, res, next) => {
 
 /**
  * @desc    Delete category by ID
- * @route   DELETE /api/v1/categories/:id
- * @access  Private
+ * @method  DELETE
+ * @route   /api/v1/categories/:id
+ * @access  private
  */
 const deleteCategory = asyncHandler(async (req, res, next) => {
   const { id } = req.params;

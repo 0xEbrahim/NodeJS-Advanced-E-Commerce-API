@@ -6,14 +6,16 @@ import Category from "../models/categoryModel.js";
 
 /**
  * @desc    Get all sub categories
- * @route   GET /api/v1/categories/sub-categories
- * @access  Public
+ * @method  GET
+ * @route   /api/v1/sub-categories
+ * @access  public
  */
 const getAllSubCategories = asyncHandler(async (req, res, next) => {
   const page = req.query.page * 1 || 1;
   const limit = req.query.limit * 1 || 50;
   const skip = (page - 1) * limit;
   const subCategories = await SubCategory.find({}).skip(skip).limit(limit);
+  //.populate({ path: "category", select: "name -_id" });
   res.status(200).json({
     status: "Success",
     resuls: subCategories.length,
@@ -23,13 +25,23 @@ const getAllSubCategories = asyncHandler(async (req, res, next) => {
 });
 
 /**
+ * @desc    Get all sub categories under specific main category
+ * @method  GET
+ * @route   /api/v1/
+ * @access  public
+ */
+
+
+/**
  * @desc    Get a specific sub category by id
- * @route   GET /api/v1/categories/sub-categories/:id
- * @access  Public
+ * @method  GET
+ * @route   /api/v1/sub-categories/:id
+ * @access  public
  */
 const getAsingleSubCategory = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const subCategory = await SubCategory.findById(id).populate("category");
+  const subCategory = await SubCategory.findById(id);
+  //.populate({ path: "category",select: "name -_id",});
   if (subCategory)
     res.status(200).json({ status: "Success", data: subCategory });
   else return next(new ApiError(`No sub category with this ID: ${id}`, 404));
@@ -37,8 +49,9 @@ const getAsingleSubCategory = asyncHandler(async (req, res, next) => {
 
 /**
  * @desc    Create sub Category
- * @route   POST /api/v1/categories/sub-categories
- * @access  Private
+ * @method  POST
+ * @route   /api/v1/sub-categories
+ * @access  private
  */
 const createSubCategory = asyncHandler(async (req, res, next) => {
   const { name, categoryId } = req.body;
@@ -54,9 +67,10 @@ const createSubCategory = asyncHandler(async (req, res, next) => {
 });
 
 /**
- * @desc    Update sub category by ID
- * @route   PUT /api/v1/categories/sub-categories/:id
- * @access  Private
+ * @desc      Update sub category by ID
+ * @method    PUT
+ * @route     PUT /api/v1/sub-categories/:id
+ * @access    private
  */
 const updateSubCategory = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
@@ -72,17 +86,18 @@ const updateSubCategory = asyncHandler(async (req, res, next) => {
 });
 
 /**
- * @desc    Delete sub category by ID
- * @route   DELETE /api/v1/categories/sub-categories/:id
- * @access  Private
+ * @desc      Delete sub category by ID
+ * @method    DELETE
+ * @route     /api/v1/sub-categories/:id
+ * @access    private
  */
 const deleteSubCategory = asyncHandler(async (req, res, next) => {
-const { id } = req.params;
-const subCategory = await SubCategory.findById(id);
-if (!subCategory)
-  return next(new ApiError(`No category with this ID: ${id}`, 404));
-await SubCategory.findByIdAndDelete(id);
-res.status(204).json({ status: "Success", data:{} });
+  const { id } = req.params;
+  const subCategory = await SubCategory.findById(id);
+  if (!subCategory)
+    return next(new ApiError(`No category with this ID: ${id}`, 404));
+  await SubCategory.findByIdAndDelete(id);
+  res.status(204).json({ status: "Success", data: {} });
 });
 
 export {
