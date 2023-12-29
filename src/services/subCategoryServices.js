@@ -62,7 +62,7 @@ const createSubCategory = asyncHandler(async (req, res, next) => {
 /**
  * @desc      Update sub category by ID
  * @method    PUT
- * @route     PUT /api/v1/sub-categories/:id
+ * @route     /api/v1/sub-categories/:id
  * @access    private
  */
 const updateSubCategory = asyncHandler(async (req, res, next) => {
