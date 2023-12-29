@@ -4,7 +4,9 @@ import express from "express";
 import morgan from "morgan";
 import ApiError from "./utils/apiError.js";
 import categoryRoute from "./routes/categoryRoute.js";
+import subCategoryRoute from './routes/subCategoryRoute.js'
 import { errorHandler } from "./middlewares/errorHandling.js";
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -17,6 +19,7 @@ if (process.env.NODE_ENV === "development") {
 
 // Mount routes
 app.use("/api/v1/categories", categoryRoute);
+app.use("/api/v1/sub-categories", subCategoryRoute);
 
 app.all("*", (req, res, next) => {
   next(new ApiError(`Route not found: ${req.originalUrl}`, 404));
@@ -32,8 +35,8 @@ const server = app.listen(PORT, () => {
 // handling erros outside express
 process.on("unhandledRejection", (err) => {
   console.error(`unhandledRejection Errors: ${err.name} | ${err.message}`);
-  server.close(()=>{
-  console.error(`Shutting down...`);
-  process.exit(1);
+  server.close(() => {
+    console.error(`Shutting down...`);
+    process.exit(1);
   });
-})
+});

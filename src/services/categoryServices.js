@@ -1,6 +1,7 @@
-import Category from "../models/categoryModel.js";
-import slugify from "slugify";
 import asyncHandler from "express-async-handler";
+import slugify from "slugify";
+
+import Category from "../models/categoryModel.js";
 import ApiError from "../utils/apiError.js";
 
 /**
@@ -61,7 +62,7 @@ const updateCategory = asyncHandler(async (req, res, next) => {
   );
   if (!updatedCategory)
     return next(new ApiError(`No category with this ID: ${id}`, 404));
-  else res.status(200).json({ status: "Success", data: updatedCategory });
+   res.status(200).json({ status: "Success", data: updatedCategory });
 });
 
 /**
@@ -71,10 +72,11 @@ const updateCategory = asyncHandler(async (req, res, next) => {
  */
 const deleteCategory = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const deletedCategory = await Category.findByIdAndDelete(id);
-  if (!deletedCategory)
+  const category = await Category.findById(id);
+  if (!category)
     return next(new ApiError(`No category with this ID: ${id}`, 404));
-  else res.status(204).json({ status: "Success" });
+  await Category.findByIdAndDelete(id);
+  res.status(204).json({ status: "Success",  data:{} });
 });
 
 export {

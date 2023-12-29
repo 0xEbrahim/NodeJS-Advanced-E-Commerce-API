@@ -5,7 +5,7 @@
   "description": "",
   "main": "src/app.js",
   "scripts": {
-    "start:dev": "SET NODE_ENV=development & nodemon src/app.js",
+    "start:dev": "nodemon src/app.js",
     "start:prod": "SET NODE_ENV=production & node src/app.js"
   },
   "keywords": [],
