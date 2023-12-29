@@ -12,7 +12,11 @@ import {
   getCategoryValidator,
   updateCategoryValidator,
 } from "../utils/validators/categoryValidator.js";
+
+import subCategoryRoute from './subCategoryRoute.js'
 const router = express.Router();
+
+router.use("/:categoryId/sub-categories", subCategoryRoute);
 
 router
   .route("/")

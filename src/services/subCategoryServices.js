@@ -14,8 +14,10 @@ const getAllSubCategories = asyncHandler(async (req, res, next) => {
   const page = req.query.page * 1 || 1;
   const limit = req.query.limit * 1 || 50;
   const skip = (page - 1) * limit;
-  const subCategories = await SubCategory.find({}).skip(skip).limit(limit);
-  //.populate({ path: "category", select: "name -_id" });
+
+  const subCategories = await SubCategory.find(req.filterObj)
+    .skip(skip)
+    .limit(limit);
   res.status(200).json({
     status: "Success",
     resuls: subCategories.length,
@@ -23,14 +25,6 @@ const getAllSubCategories = asyncHandler(async (req, res, next) => {
     data: subCategories,
   });
 });
-
-/**
- * @desc    Get all sub categories under specific main category
- * @method  GET
- * @route   /api/v1/
- * @access  public
- */
-
 
 /**
  * @desc    Get a specific sub category by id
@@ -41,7 +35,6 @@ const getAllSubCategories = asyncHandler(async (req, res, next) => {
 const getAsingleSubCategory = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const subCategory = await SubCategory.findById(id);
-  //.populate({ path: "category",select: "name -_id",});
   if (subCategory)
     res.status(200).json({ status: "Success", data: subCategory });
   else return next(new ApiError(`No sub category with this ID: ${id}`, 404));
@@ -54,14 +47,14 @@ const getAsingleSubCategory = asyncHandler(async (req, res, next) => {
  * @access  private
  */
 const createSubCategory = asyncHandler(async (req, res, next) => {
-  const { name, categoryId } = req.body;
-  const parentCategory = await Category.findById(categoryId);
+  const { name, category } = req.body;
+  const parentCategory = await Category.findById(category);
   if (!parentCategory)
-    return next(new ApiError(`No category with this ID: ${categoryId}`, 404));
+    return next(new ApiError(`No category with this ID: ${category}`, 404));
   const newSubCategory = await SubCategory.create({
     name,
     slug: slugify(name),
-    category: categoryId,
+    category: category,
   });
   res.status(201).json({ status: "Success", data: newSubCategory });
 });

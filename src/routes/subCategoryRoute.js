@@ -12,12 +12,18 @@ import {
   getASingleSubCategoryValidator,
   updateSubCategoryValidator,
 } from "../utils/validators/subCategoryValidator.js";
-const router = express.Router();
+import { setToBody } from "../middlewares/setCategoryIdToBody.js";
+import { setToBody as filterObj } from "../middlewares/setFilterObject.js";
+
+/**
+ * @DESC merge params : Allow us to access parameters of another route
+ */
+const router = express.Router({ mergeParams: true });
 
 router
   .route("/")
-  .post(createSubCategoryValidator, createSubCategory)
-  .get(getAllSubCategories);
+  .post(setToBody, createSubCategoryValidator, createSubCategory)
+  .get(filterObj, getAllSubCategories);
 router
   .route("/:id")
   .get(getASingleSubCategoryValidator, getAsingleSubCategory)

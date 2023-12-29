@@ -9,13 +9,18 @@ const createSubCategoryValidator = [
     .withMessage("Too short sub category name")
     .isLength({ max: 32 })
     .withMessage("Too long sub category name"),
-  check("categoryId")
+  check("category")
     .notEmpty()
     .withMessage("Category Id cannot be empty.")
     .isMongoId()
     .withMessage("Invalid sub category ID format."),
   validatorMiddleware,
+  check("categoryId")
+    .isMongoId()
+    .withMessage("Invalid sub category ID format."),
 ];
+
+
 
 const deleteSubCategoriesValidator = [
   check("id").isMongoId().withMessage("Invalid sub category ID format."),
