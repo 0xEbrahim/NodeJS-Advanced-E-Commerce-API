@@ -1,5 +1,10 @@
 import { check } from "express-validator";
 import { validatorMiddleware } from "../../middlewares/validatorMiddleware.js";
+import Category from "../../models/categoryModel.js";
+import SubCategory from "../../models/subCategoryModel.js";
+import Brand from "../../models/brandModel.js";
+import asyncHandler from "express-async-handler";
+import ApiError from "../apiError.js";
 
 const createProductValidator = [
   check("title")
@@ -57,9 +62,52 @@ const createProductValidator = [
     .notEmpty()
     .withMessage("any product should belong to a category")
     .isMongoId()
-    .withMessage("Not valid MongoId"),
-  check("subcategory").optional().isMongoId().withMessage("Not valid MongoId"),
-  check("brand").optional().isMongoId().withMessage("Not valid MongoId"),
+    .withMessage("Not valid MongoId")
+    .custom(
+      asyncHandler(async (category) => {
+        const getCategory = await Category.findById(category);
+        console.log(getCategory);
+        if (!getCategory)
+          throw new ApiError(`No Category with this ID: ${category}`, 404);
+      })
+    ),
+  check("subcategories")
+    .optional()
+    .isMongoId()
+    .withMessage("Not valid MongoId")
+    .custom(
+      asyncHandler(async (value) => {
+        const subCategories = await SubCategory.find({
+          _id: { $exists: true, $in: value },
+        });
+        if (subCategories.length < 1 || subCategories.length !== value.length)
+          throw new ApiError(`Invalid Sub Categories IDs`, 404);
+      })
+    )
+    .custom(
+      asyncHandler(async (value, { req }) => {
+        const categoryId = req.body.category;
+        // check if the subCategories belong to the same category.
+        const subCategories = await SubCategory.find({
+          category: categoryId,
+          _id: { $exists: true, $in: value },
+        });
+        if (subCategories.length < 1 || subCategories.length !== value.length)
+          throw new ApiError(
+            "Sub categories don't belong to the same category"
+          );
+      })
+    ),
+  check("brand")
+    .optional()
+    .isMongoId()
+    .withMessage("Not valid MongoId")
+    .custom(
+      asyncHandler(async (value) => {
+        const brand = await Brand.findById(value);
+        if (!brand) throw new ApiError(`No brand with this ID: ${value}`, 404);
+      })
+    ),
   check("ratingsAverage")
     .optional()
     .isNumeric()

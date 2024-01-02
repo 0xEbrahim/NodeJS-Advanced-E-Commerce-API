@@ -48,9 +48,6 @@ const getAsingleSubCategory = asyncHandler(async (req, res, next) => {
  */
 const createSubCategory = asyncHandler(async (req, res, next) => {
   const { name, category } = req.body;
-  const parentCategory = await Category.findById(category);
-  if (!parentCategory)
-    return next(new ApiError(`No category with this ID: ${category}`, 404));
   const newSubCategory = await SubCategory.create({
     name,
     slug: slugify(name),

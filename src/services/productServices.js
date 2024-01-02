@@ -46,7 +46,8 @@ const getSingleProduct = asyncHandler(async (req, res, next) => {
     path: "category",
     select: "name -_id",
   });
-  if (!product) return next(new ApiError(`No product with this ID: ${id}`,404));
+  if (!product)
+    return next(new ApiError(`No product with this ID: ${id}`, 404));
   res.status(200).json({ status: "Success", data: product });
 });
 
@@ -57,7 +58,7 @@ const getSingleProduct = asyncHandler(async (req, res, next) => {
  * @access  private
  */
 const updateProduct = asyncHandler(async (req, res, next) => {
-  req.body.slug = slugify(req.body.title);
+  if (req.body.title) req.body.slug = slugify(req.body.title);
   const { id } = req.params;
   const updatedProduct = await Product.findByIdAndUpdate(
     id,
@@ -66,7 +67,7 @@ const updateProduct = asyncHandler(async (req, res, next) => {
   );
   if (!updatedProduct)
     if (!updatedProduct)
-      return next(new ApiError(`No product with this ID: ${id}`,404));
+      return next(new ApiError(`No product with this ID: ${id}`, 404));
   res.status(200).json({ status: "Success", data: updatedProduct });
 });
 
@@ -81,7 +82,7 @@ const deleteProduct = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const deletedProduct = await Product.findByIdAndDelete(id, { new: true });
   if (!deletedProduct)
-    return next(new ApiError(`No product with this ID: ${id}`,404));
+    return next(new ApiError(`No product with this ID: ${id}`, 404));
   res.status(204).json({ status: "Success", data: deletedProduct });
 });
 

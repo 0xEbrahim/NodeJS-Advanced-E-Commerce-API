@@ -1,6 +1,8 @@
 import { check } from "express-validator";
 import { validatorMiddleware } from "../../middlewares/validatorMiddleware.js";
-
+import Category from "../../models/categoryModel.js";
+import asyncHandler from "express-async-handler";
+import ApiError from "../apiError.js";
 const createSubCategoryValidator = [
   check("name")
     .notEmpty()
@@ -13,11 +15,14 @@ const createSubCategoryValidator = [
     .notEmpty()
     .withMessage("Category Id cannot be empty.")
     .isMongoId()
-    .withMessage("Invalid sub category ID format."),
-  validatorMiddleware,
-  check("categoryId")
-    .isMongoId()
-    .withMessage("Invalid sub category ID format."),
+    .withMessage("Invalid sub category ID format.")
+    .custom(
+      asyncHandler(async (id) => {
+        const category = await Category.findById(id);
+        if (!category)
+          throw new ApiError(`No category with this ID: ${category}`, 404);
+      })
+    ),
   validatorMiddleware,
 ];
 
