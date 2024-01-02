@@ -18,9 +18,8 @@ const createSubCategoryValidator = [
   check("categoryId")
     .isMongoId()
     .withMessage("Invalid sub category ID format."),
+  validatorMiddleware,
 ];
-
-
 
 const deleteSubCategoriesValidator = [
   check("id").isMongoId().withMessage("Invalid sub category ID format."),
