@@ -6,6 +6,7 @@ import ApiError from "./utils/apiError.js";
 import categoryRoute from "./routes/categoryRoute.js";
 import subCategoryRoute from './routes/subCategoryRoute.js'
 import brandRoute from './routes/brandRoute.js'
+import productRoute from './routes/productRoute.js'
 import { errorHandler } from "./middlewares/errorHandling.js";
 
 const app = express();
@@ -19,6 +20,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // Mount routes
+app.use('/api/v1/products', productRoute)
 app.use("/api/v1/categories", categoryRoute);
 app.use("/api/v1/sub-categories", subCategoryRoute);
 app.use('/api/v1/brands', brandRoute);
